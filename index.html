@@ -4,39 +4,44 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Para Ti ❤️</title>
-
 <style>
 body{
+  margin:0;
   font-family: Arial, sans-serif;
   background: linear-gradient(135deg,#ffdde1,#ee9ca7);
   text-align:center;
-  padding:20px;
 }
+h1{color:#b30059; margin-top:20px;}
 
-h1{
-  color:#b30059;
-}
-
-#videoContainer{
+/* Secciones */
+.section{
   display:none;
-  margin-top:20px;
-  max-width:420px;
-  margin-left:auto;
-  margin-right:auto;
+  width:100%;
+  height:100vh;
+  padding:20px;
+  box-sizing:border-box;
+}
+
+/* Vídeo */
+#videoSection{
+  display:block;
+  background:black;
+  position:relative;
 }
 
 iframe{
   width:100%;
-  aspect-ratio:9/16;
-  border-radius:14px;
+  height:100%;
   border:none;
 }
 
-#question{
-  display:none;
-  margin-top:30px;
+/* Pregunta */
+#questionSection p{
+  font-size:1.5em;
+  margin-top:50px;
 }
 
+/* Botones */
 button{
   padding:15px 25px;
   font-size:18px;
@@ -46,89 +51,102 @@ button{
   margin:10px;
 }
 
-#yesBtn{
-  background-color:#ff4d88;
-  color:white;
-}
+#yesBtn{background-color:#ff4d88; color:white;}
+#noBtn{background-color:#ccc; position:relative;}
 
-#noBtn{
-  background-color:#ccc;
-  position:relative;
+/* Subpágina historia */
+#storySection img{
+  max-width:90%;
+  margin-top:20px;
+  border-radius:14px;
 }
 </style>
 </head>
 
 <body>
 
-<h1>💖 Tengo algo para ti 💖</h1>
-
-<button id="playBtn">▶️ Reproducir</button>
-
-<div id="videoContainer">
-  <iframe
-    id="video"
-    src="https://www.youtube.com/embed/yf3KIZavpXk?playsinline=1"
+<!-- SECCIÓN 1: VÍDEO -->
+<div id="videoSection" class="section">
+  <iframe id="video"
+    src="https://www.youtube.com/embed/yf3KIZavpXk?playsinline=1&mute=1"
     allow="autoplay; encrypted-media"
     allowfullscreen>
   </iframe>
 </div>
 
-<div id="question">
-  <p>
-  Si has llegado hasta aquí es porque eres muy importante para mí…<br>
-  ¿Quieres seguir escribiendo esta historia conmigo?
-  </p>
-
+<!-- SECCIÓN 2: PREGUNTA -->
+<div id="questionSection" class="section">
+  <p>Si has llegado hasta aquí es porque eres muy importante para mí…<br>
+  ¿Quieres seguir escribiendo esta historia conmigo?</p>
   <button id="yesBtn">Sí ❤️</button>
   <button id="noBtn">No 😅</button>
 </div>
 
+<!-- SECCIÓN 3: HISTORIA -->
+<div id="storySection" class="section">
+  <p>Aquí empieza nuestra historia... ❤️</p>
+  <img src="https://via.placeholder.com/400x300.png?text=Tu+sorpresa" alt="Sorpresa">
+  <br>
+  <button id="storyWhatsAppBtn">Sigamos escribiendo esta historia... con nuestras reglas</button>
+</div>
+
 <script>
-const playBtn = document.getElementById("playBtn");
-const videoContainer = document.getElementById("videoContainer");
-const question = document.getElementById("question");
-const noBtn = document.getElementById("noBtn");
+const videoSection = document.getElementById("videoSection");
+const questionSection = document.getElementById("questionSection");
+const storySection = document.getElementById("storySection");
+
 const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const storyWhatsAppBtn = document.getElementById("storyWhatsAppBtn");
+const iframe = document.getElementById("video");
 
-let videoStarted=false;
+// REPRODUCIR VIDEO AUTOMÁTICAMENTE A LOS 3 SEGUNDOS
+setTimeout(()=>{
+  iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+}, 3000);
 
-// ▶️ Mostrar y reproducir vídeo (compatible iPhone)
-playBtn.onclick=()=>{
-  playBtn.style.display="none";
-  videoContainer.style.display="block";
+// DETECTAR FIN DE VIDEO (API de YouTube)
+function onYouTubeIframeAPIReady() {
+  var player = new YT.Player('video', {
+    events: {
+      'onStateChange': onPlayerStateChange
+    }
+  });
+}
 
-  const iframe=document.getElementById("video");
-
-  if(!videoStarted){
-    iframe.src+="&autoplay=1";
-    videoStarted=true;
+function onPlayerStateChange(event) {
+  // Cuando termina (estado 0)
+  if(event.data === 0){
+    videoSection.style.display="none";
+    questionSection.style.display="block";
   }
+}
 
-  // Mostrar pregunta tras unos segundos (temporal)
-  setTimeout(()=>{
-    question.style.display="block";
-  },15000);
-};
-
-// Botón NO se mueve 😅
+// Botón NO se mueve
 function moverBoton(){
   const x=Math.random()*200-100;
   const y=Math.random()*200-100;
   noBtn.style.transform=`translate(${x}px,${y}px)`;
 }
+noBtn.addEventListener("mouseover", moverBoton);
+noBtn.addEventListener("touchstart", moverBoton);
 
-noBtn.addEventListener("touchstart",moverBoton);
-noBtn.addEventListener("mouseover",moverBoton);
-
-// Botón SÍ → WhatsApp
-yesBtn.onclick=()=>{
-  const mensaje=encodeURIComponent(
-    "❤️ He dicho que SÍ ❤️\n\nPulsa enviar 😊"
-  );
-
-  window.location.href=
-    "https://wa.me/34666249985?text="+mensaje;
+// Botón SÍ → Mostrar historia
+yesBtn.onclick = ()=>{
+  questionSection.style.display="none";
+  storySection.style.display="block";
 };
+
+// Botón historia → WhatsApp prellenado
+storyWhatsAppBtn.onclick = ()=>{
+  const mensaje = encodeURIComponent("TU MENSAJE COMPLETO AQUÍ");
+  window.location.href = "https://wa.me/34600520811?text="+mensaje;
+};
+
+// CARGAR API DE YOUTUBE
+var tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+document.body.appendChild(tag);
 </script>
 
 </body>
