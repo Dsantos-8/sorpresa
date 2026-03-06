@@ -91,11 +91,10 @@ transition:opacity 2s;
 id="video"
 playsinline
 webkit-playsinline
-muted
-autoplay
-style="width:100%;height:100vh;object-fit:cover;"
+controls
+style="width:100%;height:100vh;object-fit:cover;background:black;"
 >
-
+  
 <source id="videosource" src="https://pub-4829155288bd441daa973a1a77bddaf4.r2.dev/copy_7178C5EF-4273-4375-8CB2-BC451F24A31C.mp4" type="video/mp4">
 
 </video>
@@ -107,7 +106,9 @@ style="width:100%;height:100vh;object-fit:cover;"
 
 <div id="question" class="section hidden">
 
-<h1 id="questionText" class="fadeText">
+<h1 id="linea1" class="fadeText"></h1>
+
+<h1 id="linea2" class="fadeText" style="margin-top:20px;"></h1>
 
 AQUÍ VA LA PREGUNTA
 
@@ -166,20 +167,38 @@ video.play();
 
 let video = document.getElementById("video");
 
-video.addEventListener("ended",()=>{
-
-document.body.style.background="black";
+video.onended = () => {
 
 setTimeout(()=>{
 
 document.getElementById("videoSection").classList.add("hidden");
+
 document.getElementById("question").classList.remove("hidden");
-document.getElementById("questionText").style.opacity=1;
 
-},2000)
+mostrarPregunta();
 
-});
+},3000);
 
+}
+
+// FUNCION MUESTRA DE PREGUNTA
+
+function mostrarPregunta(){
+
+let l1 = document.getElementById("linea1");
+let l2 = document.getElementById("linea2");
+
+l1.innerText = "Tengo algo importante que preguntarte...";
+l1.style.opacity = 1;
+
+setTimeout(()=>{
+
+l2.innerText = "AQUÍ VA TU PREGUNTA FINAL";
+l2.style.opacity = 1;
+
+},2000);
+
+}
 
 // BOTÓN SI
 
