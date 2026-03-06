@@ -87,8 +87,6 @@ transition:opacity 2s;
 
 <div id="videoSection" class="section hidden">
 
-<div id="videoSection" class="section hidden">
-
 <video
 id="video"
 playsinline
@@ -168,11 +166,6 @@ document.getElementById("videoSection").classList.remove("hidden")
 let video=document.getElementById("video");
 let source=document.getElementById("videosource");
 
-// evitar cache
-source.src = source.src + "&v=" + Date.now();
-video.load();
-
-video.addEventListener("ended",()=>{
 
 // Pantalla negra cinematográfica
 document.body.style.background="black";
