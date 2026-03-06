@@ -3,166 +3,238 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Para Ti ❤️</title>
+<title>Para ti ❤️</title>
+
 <style>
+
 body{
-  margin:0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg,#ffdde1,#ee9ca7);
-  text-align:center;
+margin:0;
+font-family:Helvetica,Arial,sans-serif;
+background:black;
+color:white;
+text-align:center;
+overflow:hidden;
 }
-h1{color:#b30059; margin-top:20px;}
 
-/* Secciones */
 .section{
-  display:none;
-  width:100%;
-  height:100vh;
-  padding:20px;
-  box-sizing:border-box;
+position:absolute;
+width:100%;
+height:100%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+transition:opacity 1.5s;
 }
 
-/* VIDEO */
-#videoSection{
-  display:block;
-  background:black;
-  position:relative;
-}
-#playOverlay{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  font-size:3em;
-  color:white;
-  background: rgba(0,0,0,0.5);
-  border-radius:50%;
-  padding:20px;
-  cursor:pointer;
-  z-index:10;
-}
-iframe{
-  width:100%;
-  height:100%;
-  border:none;
+.hidden{
+opacity:0;
+pointer-events:none;
 }
 
-/* Pregunta */
-#questionSection p{
-  font-size:1.5em;
-  margin-top:50px;
+img{
+max-width:100%;
+max-height:100%;
+object-fit:cover;
 }
+
+video{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
 button{
-  padding:15px 25px;
-  font-size:18px;
-  border:none;
-  border-radius:30px;
-  cursor:pointer;
-  margin:10px;
+padding:15px 30px;
+font-size:20px;
+margin:15px;
+border:none;
+border-radius:30px;
+cursor:pointer;
+transition:transform 0.3s;
 }
-#yesBtn{background-color:#ff4d88; color:white;}
-#noBtn{background-color:#ccc; position:relative;}
 
-/* Historia */
-#storySection img{
-  max-width:90%;
-  margin-top:20px;
-  border-radius:14px;
+.yes{
+background:#ff2d55;
+color:white;
 }
+
+.no{
+background:#444;
+color:white;
+}
+
+.fadeText{
+opacity:0;
+transition:opacity 2s;
+}
+
 </style>
 </head>
+
 <body>
 
-<!-- SECCIÓN 1: VIDEO -->
-<div id="videoSection" class="section">
-  <iframe id="video"
-    src="https://www.youtube.com/embed/yf3KIZavpXk?enablejsapi=1&playsinline=1&mute=1"
-    allow="autoplay; encrypted-media"
-    allowfullscreen>
-  </iframe>
-  <div id="playOverlay">▶️</div>
+<!-- FOTO INICIAL -->
+
+<div id="intro" class="section">
+
+<img src="foto.jpg">
+
 </div>
 
-<!-- SECCIÓN 2: PREGUNTA -->
-<div id="questionSection" class="section">
-  <p>Si has llegado hasta aquí es porque eres muy importante para mí…<br>
-  ¿Quieres seguir escribiendo esta historia conmigo?</p>
-  <button id="yesBtn">Sí ❤️</button>
-  <button id="noBtn">No 😅</button>
+
+<!-- VIDEO -->
+
+<div id="videoSection" class="section hidden">
+
+<video id="video" playsinline controls>
+
+<source src="VIDEO_DROPBOX_AQUI" type="video/mp4">
+
+</video>
+
 </div>
 
-<!-- SECCIÓN 3: HISTORIA -->
-<div id="storySection" class="section">
-  <p>Aquí empieza nuestra historia... ❤️</p>
-  <img src="https://via.placeholder.com/400x300.png?text=Tu+sorpresa" alt="Sorpresa">
-  <br>
-  <button id="storyWhatsAppBtn">Sigamos escribiendo esta historia... con nuestras reglas</button>
+
+<!-- PREGUNTA -->
+
+<div id="question" class="section hidden">
+
+<h1 id="questionText" class="fadeText">
+
+AQUÍ VA LA PREGUNTA
+
+</h1>
+
+<div>
+
+<button class="yes" onclick="yes()">Sí</button>
+
+<button class="no">No</button>
+
 </div>
+
+</div>
+
+
+<!-- FINAL -->
+
+<div id="final" class="section hidden">
+
+<h1>
+
+AQUÍ VA EL TEXTO FINAL
+
+</h1>
+
+<img src="foto_final.jpg" style="max-width:70%;margin-top:20px;">
+
+<br><br>
+
+<button class="yes" onclick="whatsapp()">
+
+Sigamos escribiendo esta historia... con nuestras reglas
+
+</button>
+
+</div>
+
 
 <script>
-let videoSection = document.getElementById("videoSection");
-let questionSection = document.getElementById("questionSection");
-let storySection = document.getElementById("storySection");
 
-let yesBtn = document.getElementById("yesBtn");
-let noBtn = document.getElementById("noBtn");
-let storyWhatsAppBtn = document.getElementById("storyWhatsAppBtn");
-let playOverlay = document.getElementById("playOverlay");
 
-let player;
+// FOTO → VIDEO
 
-// FUNCION DE BOTON PLAY
-playOverlay.onclick = function(){
-  // Oculta overlay
-  playOverlay.style.display="none";
+setTimeout(()=>{
 
-  // Inicia video
-  player.playVideo();
+document.getElementById("intro").classList.add("hidden")
+
+document.getElementById("videoSection").classList.remove("hidden")
+
+},5000)
+
+
+// PLAY VIDEO AL TOCAR
+
+let video=document.getElementById("video")
+
+document.getElementById("videoSection").addEventListener("click",()=>{
+
+video.play()
+
+})
+
+
+// CUANDO ACABA EL VIDEO
+
+video.onended=()=>{
+
+setTimeout(()=>{
+
+document.getElementById("videoSection").classList.add("hidden")
+
+document.getElementById("question").classList.remove("hidden")
+
+document.getElementById("questionText").style.opacity=1
+
+vibrate()
+
+},3000)
+
 }
 
-// BOTON NO SE MUEVE
-function moverBoton(){
-  const x=Math.random()*200-100;
-  const y=Math.random()*200-100;
-  noBtn.style.transform=`translate(${x}px,${y}px)`;
-}
-noBtn.addEventListener("mouseover", moverBoton);
-noBtn.addEventListener("touchstart", moverBoton);
 
-// BOTON SI → HISTORIA
-yesBtn.onclick = ()=>{
-  questionSection.style.display="none";
-  storySection.style.display="block";
-};
+// VIBRACIÓN (IPHONE)
 
-// BOTON HISTORIA → WhatsApp
-storyWhatsAppBtn.onclick = ()=>{
-  const mensaje = encodeURIComponent("TU MENSAJE COMPLETO AQUÍ");
-  window.location.href = "https://wa.me/34666249985?text="+mensaje;
-};
+function vibrate(){
 
-// CARGAR API DE YOUTUBE
-var tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api";
-document.body.appendChild(tag);
+if(navigator.vibrate){
 
-// Crear player de YouTube
-function onYouTubeIframeAPIReady() {
-  player = new YT.Player('video', {
-    events: {
-      'onStateChange': onPlayerStateChange
-    }
-  });
+navigator.vibrate([200,100,200])
+
 }
 
-// DETECTAR FIN DEL VIDEO
-function onPlayerStateChange(event) {
-  // Estado 0 = terminó
-  if(event.data === 0){
-    videoSection.style.display="none";
-    questionSection.style.display="block";
-  }
 }
+
+
+// BOTÓN SI
+
+function yes(){
+
+document.getElementById("question").classList.add("hidden")
+
+document.getElementById("final").classList.remove("hidden")
+
+vibrate()
+
+}
+
+
+// WHATSAPP
+
+function whatsapp(){
+
+window.location.href="https://wa.me/34666249985?text=MENSAJE_AQUI"
+
+}
+
+
+// BOTÓN NO QUE SE MUEVE
+
+let noBtn=document.querySelector(".no")
+
+noBtn.addEventListener("click",()=>{
+
+let x=Math.random()*200-100
+let y=Math.random()*200-100
+
+noBtn.style.transform=`translate(${x}px,${y}px)`
+
+vibrate()
+
+})
+
+
 </script>
 
 </body>
