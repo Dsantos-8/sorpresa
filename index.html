@@ -149,60 +149,36 @@ Sigamos escribiendo esta historia... con nuestras reglas
 
 <script>
 
-
 // FOTO → VIDEO
 
 setTimeout(()=>{
 
-document.getElementById("intro").classList.add("hidden")
+document.getElementById("intro").classList.add("hidden");
+document.getElementById("videoSection").classList.remove("hidden");
 
-document.getElementById("videoSection").classList.remove("hidden")
+let video = document.getElementById("video");
+video.play();
 
 },5000)
 
 
-// PLAY VIDEO AL TOCAR
+// CUANDO TERMINA EL VIDEO
 
-let video=document.getElementById("video");
-let source=document.getElementById("videosource");
+let video = document.getElementById("video");
 
+video.addEventListener("ended",()=>{
 
-// Pantalla negra cinematográfica
 document.body.style.background="black";
 
-// 2 segundos de pausa cinematográfica
 setTimeout(()=>{
 
 document.getElementById("videoSection").classList.add("hidden");
-
 document.getElementById("question").classList.remove("hidden");
-
 document.getElementById("questionText").style.opacity=1;
 
-},2000);
+},2000)
 
 });
-
-
-// CUANDO ACABA EL VIDEO
-
-video.onended=()=>{
-
-setTimeout(()=>{
-
-document.getElementById("videoSection").classList.add("hidden")
-
-document.getElementById("question").classList.remove("hidden")
-
-document.getElementById("questionText").style.opacity=1
-
-},3000)
-
-}
-
-
-// VIBRACIÓN (IPHONE)
-
 
 
 // BOTÓN SI
@@ -230,17 +206,16 @@ window.location.href="https://wa.me/34666249985?text=MENSAJE_AQUI"
 
 // BOTÓN NO QUE SE MUEVE
 
-let noBtn=document.querySelector(".no")
+let noBtn=document.querySelector(".no");
 
 noBtn.addEventListener("click",()=>{
 
-let x=Math.random()*200-100
-let y=Math.random()*200-100
+let x=Math.random()*200-100;
+let y=Math.random()*200-100;
 
-noBtn.style.transform=`translate(${x}px,${y}px)`
+noBtn.style.transform=`translate(${x}px,${y}px)`;
 
-})
-
+});
 
 </script>
 
