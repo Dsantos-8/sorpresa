@@ -177,8 +177,6 @@ document.getElementById("question").classList.remove("hidden")
 
 document.getElementById("questionText").style.opacity=1
 
-vibrate()
-
 },3000)
 
 }
@@ -201,11 +199,15 @@ navigator.vibrate([200,100,200])
 
 function yes(){
 
+// Vibrar al pulsar SI
+if(navigator.vibrate){
+navigator.vibrate([200,100,200])
+}
+
+// Transición hacia la pantalla final
 document.getElementById("question").classList.add("hidden")
 
 document.getElementById("final").classList.remove("hidden")
-
-vibrate()
 
 }
 
@@ -229,8 +231,6 @@ let x=Math.random()*200-100
 let y=Math.random()*200-100
 
 noBtn.style.transform=`translate(${x}px,${y}px)`
-
-vibrate()
 
 })
 
