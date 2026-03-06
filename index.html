@@ -87,7 +87,16 @@ transition:opacity 2s;
 
 <div id="videoSection" class="section hidden">
 
-<video id="video" playsinline controls>
+<div id="videoSection" class="section hidden">
+
+<video
+id="video"
+playsinline
+webkit-playsinline
+muted
+autoplay
+style="width:100%;height:100vh;object-fit:cover;"
+>
 
 <source src="https://www.dropbox.com/scl/fi/o0vew403we7tdchxr1ply/copy_7178C5EF-4273-4375-8CB2-BC451F24A31C.mp4?rlkey=ku9weya2bs430vzc1vrq66q02&st=rjgp08c2&raw=1" type="video/mp4">
 
@@ -156,13 +165,25 @@ document.getElementById("videoSection").classList.remove("hidden")
 
 // PLAY VIDEO AL TOCAR
 
-let video=document.getElementById("video")
+let video=document.getElementById("video");
 
-document.getElementById("videoSection").addEventListener("click",()=>{
+video.addEventListener("ended",()=>{
 
-video.play()
+// Pantalla negra cinematográfica
+document.body.style.background="black";
 
-})
+// 2 segundos de pausa cinematográfica
+setTimeout(()=>{
+
+document.getElementById("videoSection").classList.add("hidden");
+
+document.getElementById("question").classList.remove("hidden");
+
+document.getElementById("questionText").style.opacity=1;
+
+},2000);
+
+});
 
 
 // CUANDO ACABA EL VIDEO
