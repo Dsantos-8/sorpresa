@@ -184,30 +184,18 @@ document.getElementById("questionText").style.opacity=1
 
 // VIBRACIÓN (IPHONE)
 
-function vibrate(){
-
-if(navigator.vibrate){
-
-navigator.vibrate([200,100,200])
-
-}
-
-}
 
 
 // BOTÓN SI
 
 function yes(){
 
-// Vibrar al pulsar SI
 if(navigator.vibrate){
-navigator.vibrate([200,100,200])
+navigator.vibrate(300);
 }
 
-// Transición hacia la pantalla final
-document.getElementById("question").classList.add("hidden")
-
-document.getElementById("final").classList.remove("hidden")
+document.getElementById("question").classList.add("hidden");
+document.getElementById("final").classList.remove("hidden");
 
 }
 
