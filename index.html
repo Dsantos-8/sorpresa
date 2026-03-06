@@ -1,242 +1,775 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Para ti ❤️</title>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+  <title>Para ti ❤️</title>
 
-<style>
+  <style>
+    :root {
+      --vh: 1vh;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
 
-body{
-margin:0;
-font-family:Helvetica,Arial,sans-serif;
-background:black;
-color:white;
-text-align:center;
-overflow:hidden;
-}
+      --accent: #ff2d55;
+      --accent-dark: #d91f47;
+      --bg: #000;
+      --text: #fff;
+      --muted: rgba(255,255,255,0.78);
+    }
 
-.section{
-position:absolute;
-width:100%;
-height:100%;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-transition:opacity 1.5s;
-}
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-.hidden{
-opacity:0;
-pointer-events:none;
-}
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      overflow: hidden;
+      font-family: Helvetica, Arial, sans-serif;
+      color: var(--text);
+    }
 
-img{
-max-width:100%;
-max-height:100%;
-object-fit:cover;
-}
+    body {
+      text-align: center;
+    }
 
-video{
-width:100%;
-height:100%;
-object-fit:cover;
-}
+    .section {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: calc(var(--vh, 1vh) * 100);
+      min-height: 100vh;
+      min-height: 100svh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding:
+        max(20px, var(--safe-top))
+        max(18px, var(--safe-right))
+        max(20px, var(--safe-bottom))
+        max(18px, var(--safe-left));
+      opacity: 1;
+      transform: scale(1);
+      transition:
+        opacity 1.2s ease,
+        transform 1.2s ease,
+        filter 1.2s ease;
+      background: #000;
+      overflow: hidden;
+    }
 
-button{
-padding:15px 30px;
-font-size:20px;
-margin:15px;
-border:none;
-border-radius:30px;
-cursor:pointer;
-transition:transform 0.3s;
-}
+    .hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(1.02);
+      filter: blur(6px);
+    }
 
-.yes{
-background:#ff2d55;
-color:white;
-}
+    .fade-layer {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0);
+      transition: background 1.2s ease;
+      pointer-events: none;
+      z-index: 2;
+    }
 
-.no{
-background:#444;
-color:white;
-}
+    /* INTRO */
+    #intro {
+      z-index: 5;
+    }
 
-.fadeText{
-opacity:0;
-transition:opacity 2s;
-}
+    #intro img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1);
+      transition:
+        transform 1.8s ease,
+        opacity 1.2s ease,
+        filter 1.2s ease;
+    }
 
-</style>
+    #intro.exit img {
+      transform: scale(1.08);
+      opacity: 0.25;
+      filter: blur(4px);
+    }
+
+    #intro.exit .fade-layer {
+      background: rgba(0, 0, 0, 0.48);
+    }
+
+    /* VIDEO */
+    #videoSection {
+      z-index: 4;
+      background: #000;
+    }
+
+    .video-wrap {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: 0;
+      background: #000;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #000;
+    }
+
+    .video-hint {
+      position: absolute;
+      left: 50%;
+      bottom: max(24px, calc(var(--safe-bottom) + 16px));
+      transform: translateX(-50%);
+      z-index: 4;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 14px;
+      line-height: 1.2;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      pointer-events: none;
+      max-width: 90%;
+    }
+
+    .video-hint.show {
+      opacity: 1;
+    }
+
+    /* QUESTION */
+    #question {
+      z-index: 3;
+      justify-content: center;
+      background:
+        radial-gradient(circle at top, rgba(255, 45, 85, 0.16), transparent 40%),
+        #000;
+    }
+
+    .question-card {
+      width: min(92vw, 780px);
+      padding: 28px 22px 24px;
+      border-radius: 28px;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.28);
+      transform: translateY(20px) scale(0.98);
+      opacity: 0;
+      transition:
+        transform 0.9s ease,
+        opacity 0.9s ease,
+        filter 0.9s ease;
+      filter: blur(8px);
+    }
+
+    .question-card.show {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+      filter: blur(0);
+    }
+
+    .question-intro,
+    .question-main {
+      margin: 0;
+      text-wrap: balance;
+    }
+
+    .question-intro {
+      font-size: clamp(22px, 4.7vw, 34px);
+      line-height: 1.25;
+      color: rgba(255,255,255,0.95);
+      min-height: 1.4em;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .question-intro.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .question-main {
+      margin-top: 18px;
+      font-size: clamp(24px, 5.6vw, 40px);
+      line-height: 1.35;
+      font-weight: 700;
+      color: #fff;
+      min-height: 4.2em;
+      white-space: pre-wrap;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 0.08em;
+      margin-left: 2px;
+      background: #fff;
+      animation: blink 0.9s steps(1) infinite;
+      vertical-align: baseline;
+    }
+
+    @keyframes blink {
+      0%, 48% { opacity: 1; }
+      49%, 100% { opacity: 0; }
+    }
+
+    .answers-wrap {
+      position: relative;
+      width: min(92vw, 420px);
+      height: 170px;
+      margin: 30px auto 0;
+    }
+
+    .answer-buttons {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .answer-buttons.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: clamp(17px, 4.2vw, 21px);
+      line-height: 1.2;
+      padding: 15px 22px;
+      min-height: 52px;
+      max-width: 100%;
+      transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease,
+        opacity 0.25s ease;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .yes {
+      background: linear-gradient(180deg, #ff5b7c 0%, var(--accent) 100%);
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(255, 45, 85, 0.28);
+    }
+
+    .yes:hover {
+      transform: translateY(-1px) scale(1.01);
+      box-shadow: 0 12px 30px rgba(255, 45, 85, 0.35);
+    }
+
+    #yesBtn {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+    }
+
+    .no {
+      position: absolute;
+      background: rgba(255,255,255,0.14);
+      color: #fff;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+      padding-left: 18px;
+      padding-right: 18px;
+      left: 50%;
+      top: 12px;
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+
+    .no.moving {
+      transform: scale(1.03);
+    }
+
+    .no-hint {
+      position: absolute;
+      top: 74px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      font-size: 14px;
+      color: var(--muted);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+    }
+
+    .no-hint.show {
+      opacity: 1;
+    }
+
+    /* FINAL */
+    #final {
+      z-index: 2;
+      background:
+        radial-gradient(circle at top, rgba(255, 45, 85, 0.18), transparent 42%),
+        #000;
+    }
+
+    .final-wrap {
+      width: min(92vw, 520px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      transform: translateY(12px);
+      opacity: 0;
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+
+    .final-wrap.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .final-image {
+      width: min(88vw, 430px);
+      max-height: 54vh;
+      max-height: 54svh;
+      max-height: 54dvh;
+      object-fit: cover;
+      border-radius: 24px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.28);
+      animation: softFloat 3.4s ease-in-out infinite;
+    }
+
+    @keyframes softFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .click-hint {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      color: rgba(255,255,255,0.9);
+      animation: pulseHint 1.6s ease-in-out infinite;
+    }
+
+    .arrow {
+      display: inline-block;
+      animation: arrowMove 1.2s ease-in-out infinite;
+    }
+
+    @keyframes pulseHint {
+      0%, 100% { opacity: 0.72; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes arrowMove {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(4px); }
+    }
+
+    .cta-btn {
+      width: min(92vw, 420px);
+      padding: 17px 20px;
+      animation: buttonPulse 1.9s ease-in-out infinite;
+    }
+
+    @keyframes buttonPulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 8px 24px rgba(255, 45, 85, 0.28);
+      }
+      50% {
+        transform: scale(1.03);
+        box-shadow: 0 12px 32px rgba(255, 45, 85, 0.38);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .question-card {
+        padding: 24px 18px 22px;
+      }
+
+      .answers-wrap {
+        height: 182px;
+      }
+
+      .no {
+        font-size: 16px;
+        padding: 14px 16px;
+      }
+
+      #yesBtn {
+        font-size: 18px;
+      }
+
+      .cta-btn {
+        font-size: 18px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
 </head>
 
 <body>
-
-<!-- FOTO INICIAL -->
-
-<div id="intro" class="section">
-
-<img src="foto.jpg">
-
-</div>
-
-
-<!-- VIDEO -->
-
-<div id="videoSection" class="section hidden">
-
-<video
-id="video"
-playsinline
-webkit-playsinline
-controls
-style="width:100%;height:100vh;object-fit:cover;background:black;"
->
-  
-<source id="videosource" src="https://pub-4829155288bd441daa973a1a77bddaf4.r2.dev/copy_7178C5EF-4273-4375-8CB2-BC451F24A31C.mp4" type="video/mp4">
-
-</video>
-
-</div>
-
-
-<!-- PREGUNTA -->
-
-<div id="question" class="section hidden">
-
-<h1 id="linea1" class="fadeText"></h1>
-
-<h1 id="linea2" class="fadeText" style="margin-top:20px;"></h1>
-
-AQUÍ VA LA PREGUNTA
-
-</h1>
-
-<div>
-
-<button class="yes" onclick="yes()">Sí</button>
-
-<button class="no">No</button>
-
-</div>
-
-</div>
-
-
-<!-- FINAL -->
-
-<div id="final" class="section hidden">
-
-<h1>
-
-AQUÍ VA EL TEXTO FINAL
-
-</h1>
-
-<img src="foto_final.jpg" style="max-width:70%;margin-top:20px;">
-
-<br><br>
-
-<button class="yes" onclick="whatsapp()">
-
-Sigamos escribiendo esta historia... con nuestras reglas
-
-</button>
-
-</div>
-
-
-<script>
-
-// FOTO → VIDEO
-
-setTimeout(()=>{
-
-document.getElementById("intro").classList.add("hidden");
-document.getElementById("videoSection").classList.remove("hidden");
-
-let video = document.getElementById("video");
-video.play();
-
-},5000)
-
-
-// CUANDO TERMINA EL VIDEO
-
-let video = document.getElementById("video");
-
-video.onended = () => {
-
-setTimeout(()=>{
-
-document.getElementById("videoSection").classList.add("hidden");
-
-document.getElementById("question").classList.remove("hidden");
-
-mostrarPregunta();
-
-},3000);
-
-}
-
-// FUNCION MUESTRA DE PREGUNTA
-
-function mostrarPregunta(){
-
-let l1 = document.getElementById("linea1");
-let l2 = document.getElementById("linea2");
-
-l1.innerText = "Tengo algo importante que preguntarte...";
-l1.style.opacity = 1;
-
-setTimeout(()=>{
-
-l2.innerText = "AQUÍ VA TU PREGUNTA FINAL";
-l2.style.opacity = 1;
-
-},2000);
-
-}
-
-// BOTÓN SI
-
-function yes(){
-
-if(navigator.vibrate){
-navigator.vibrate(300);
-}
-
-document.getElementById("question").classList.add("hidden");
-document.getElementById("final").classList.remove("hidden");
-
-}
-
-
-// WHATSAPP
-
-function whatsapp(){
-
-window.location.href="https://wa.me/34666249985?text=MENSAJE_AQUI"
-
-}
-
-
-// BOTÓN NO QUE SE MUEVE
-
-let noBtn=document.querySelector(".no");
-
-noBtn.addEventListener("click",()=>{
-
-let x=Math.random()*200-100;
-let y=Math.random()*200-100;
-
-noBtn.style.transform=`translate(${x}px,${y}px)`;
-
-});
-
-</script>
-
+  <!-- FOTO INICIAL -->
+  <div id="intro" class="section">
+    <img src="foto.jpg" alt="Foto inicial" />
+    <div class="fade-layer"></div>
+  </div>
+
+  <!-- VIDEO -->
+  <div id="videoSection" class="section hidden">
+    <div class="video-wrap">
+      <video
+        id="video"
+        playsinline
+        webkit-playsinline
+        controls
+        preload="metadata"
+      >
+        <source
+          id="videosource"
+          src="https://pub-4829155288bd441daa973a1a77bddaf4.r2.dev/copy_7178C5EF-4273-4375-8CB2-BC451F24A31C.mp4"
+          type="video/mp4"
+        />
+      </video>
+
+      <div id="videoHint" class="video-hint">
+        Dale a play ❤️
+      </div>
+    </div>
+  </div>
+
+  <!-- PREGUNTA -->
+  <div id="question" class="section hidden">
+    <div id="questionCard" class="question-card">
+      <h1 id="linea1" class="question-intro"></h1>
+      <h1 id="linea2" class="question-main"></h1>
+
+      <div class="answers-wrap">
+        <div id="answerButtons" class="answer-buttons">
+          <button id="noBtn" class="no" type="button">mm..creo que NO</button>
+          <div id="noHint" class="no-hint"></div>
+
+          <button id="yesBtn" class="yes" type="button">
+            Por fin! Claro que sí!
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINAL -->
+  <div id="final" class="section hidden">
+    <div id="finalWrap" class="final-wrap">
+      <img src="foto_final.jpg" alt="Foto final" class="final-image" />
+
+      <div class="click-hint">
+        <span>Click aquí</span>
+        <span class="arrow">➜</span>
+      </div>
+
+      <button id="whatsappBtn" class="yes cta-btn" type="button">
+        Sigamos escribiendo esta historia... con nuestras reglas
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // AJUSTE DE ALTURA REAL EN IPHONE / SAFARI
+    function setViewportHeight() {
+      document.documentElement.style.setProperty("--vh", `${window.innerHeight * 0.01}px`);
+    }
+
+    setViewportHeight();
+    window.addEventListener("resize", setViewportHeight);
+    window.addEventListener("orientationchange", setViewportHeight);
+
+    // ELEMENTOS
+    const intro = document.getElementById("intro");
+    const videoSection = document.getElementById("videoSection");
+    const video = document.getElementById("video");
+    const videoHint = document.getElementById("videoHint");
+
+    const question = document.getElementById("question");
+    const questionCard = document.getElementById("questionCard");
+    const linea1 = document.getElementById("linea1");
+    const linea2 = document.getElementById("linea2");
+    const answerButtons = document.getElementById("answerButtons");
+
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const noHint = document.getElementById("noHint");
+
+    const finalSection = document.getElementById("final");
+    const finalWrap = document.getElementById("finalWrap");
+    const whatsappBtn = document.getElementById("whatsappBtn");
+
+    // TEXTOS
+    const introQuestion = "Tengo algo importante que preguntarte...";
+    const finalQuestion = "Está claro que hacemos un equipazo, y aunque ya hace tiempo que nos comportamos de esa forma… Aceitas o status de ser oficialmente namorada??";
+
+    const noTexts = [
+      "mm..creo que NO",
+      "uy uy... así no 😜",
+      "piénsalo mejor 🙈",
+      "error de botón 😏",
+      "segura segura? 😅",
+      "ese no no vale 😌"
+    ];
+
+    const noHintTexts = [
+      "Ese botón está un poco nervioso 😅",
+      "Creo que quiere evitar problemas 😂",
+      "Mmm... no parece muy convencido 😏",
+      "Yo probaría el otro ❤️"
+    ];
+
+    // CONTROL DE ESTADO
+    let noMoveCount = 0;
+    let finalQuestionWritten = false;
+    let questionStarted = false;
+
+    function showSection(next, current) {
+      if (current) current.classList.add("hidden");
+      next.classList.remove("hidden");
+    }
+
+    // FOTO -> VIDEO
+    setTimeout(() => {
+      intro.classList.add("exit");
+
+      setTimeout(() => {
+        showSection(videoSection, intro);
+        tryAutoplay();
+      }, 1150);
+    }, 5000);
+
+    // AUTOPLAY CON FALLBACK
+    async function tryAutoplay() {
+      try {
+        const playPromise = video.play();
+
+        if (playPromise !== undefined) {
+          await playPromise;
+          videoHint.classList.remove("show");
+        }
+      } catch (error) {
+        videoHint.classList.add("show");
+      }
+    }
+
+    video.addEventListener("play", () => {
+      videoHint.classList.remove("show");
+    });
+
+    // CUANDO TERMINA EL VIDEO
+    video.onended = () => {
+      setTimeout(() => {
+        showSection(question, videoSection);
+        mostrarPregunta();
+      }, 1800);
+    };
+
+    // MOSTRAR PREGUNTA
+    function mostrarPregunta() {
+      if (questionStarted) return;
+      questionStarted = true;
+
+      questionCard.classList.add("show");
+
+      setTimeout(() => {
+        linea1.textContent = introQuestion;
+        linea1.classList.add("visible");
+      }, 450);
+
+      setTimeout(() => {
+        typeQuestion(finalQuestion, linea2, 26, () => {
+          finalQuestionWritten = true;
+        });
+      }, 1800);
+
+      setTimeout(() => {
+        answerButtons.classList.add("visible");
+        placeNoButtonAtStart();
+      }, 5200);
+    }
+
+    // EFECTO ESCRITURA SUTIL
+    function typeQuestion(text, element, speed = 28, done) {
+      element.innerHTML = "";
+      let i = 0;
+      const cursor = document.createElement("span");
+      cursor.className = "cursor";
+
+      function write() {
+        if (i < text.length) {
+          element.textContent = text.slice(0, i + 1);
+          element.appendChild(cursor);
+          i++;
+
+          let delay = speed;
+
+          const currentChar = text[i - 1];
+          if (currentChar === "." || currentChar === "…" || currentChar === "?" || currentChar === "!") {
+            delay = speed + 120;
+          } else if (currentChar === ",") {
+            delay = speed + 60;
+          }
+
+          setTimeout(write, delay);
+        } else {
+          element.textContent = text;
+          if (done) done();
+        }
+      }
+
+      write();
+    }
+
+    // BOTÓN SÍ
+    function yes() {
+      if (navigator.vibrate) {
+        navigator.vibrate(180);
+      }
+
+      showSection(finalSection, question);
+
+      setTimeout(() => {
+        finalWrap.classList.add("show");
+      }, 120);
+    }
+
+    yesBtn.addEventListener("click", yes);
+
+    // WHATSAPP
+    function whatsapp() {
+      const message =
+`*Tablón de Reglas:*
+
+_1. Não há mentiras_
+
+_2. Tudo se fala, se é um problema se resolve já ou o mais próximo possível, mas nunca fica para dentro_
+
+_3. Dar bons dias, boa noite é dizer te quiero todos os dias. E nunca responder "yo tembien"._
+
+_4. Contar tudo pra Carolzinha e não esperar pra ver pessoalmente, principalmente coisas importantes._
+
+_5. Nunca dormir chateado um com o outro, sempre se resolver antes._`;
+
+      const phone = "34666249985";
+      const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+      window.location.href = url;
+    }
+
+    whatsappBtn.addEventListener("click", whatsapp);
+
+    // BOTÓN NO TRAVIESO
+    function placeNoButtonAtStart() {
+      noBtn.style.left = "50%";
+      noBtn.style.top = "12px";
+      noBtn.style.transform = "translateX(-50%)";
+    }
+
+    function moveNoButton() {
+      const container = answerButtons.getBoundingClientRect();
+      const btn = noBtn.getBoundingClientRect();
+
+      const margin = 10;
+      const maxX = container.width - btn.width - margin;
+      const maxY = container.height - btn.height - margin;
+
+      let x = Math.random() * Math.max(40, maxX);
+      let y = 8 + Math.random() * Math.max(40, maxY - 8);
+
+      // dejar más espacio al botón principal
+      if (y > container.height - 82) {
+        y = Math.max(8, y - 60);
+      }
+
+      noBtn.classList.add("moving");
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
+      noBtn.style.transform = "none";
+
+      setTimeout(() => {
+        noBtn.classList.remove("moving");
+      }, 220);
+    }
+
+    function reactNoButton() {
+      noMoveCount++;
+
+      const randomText = noTexts[noMoveCount % noTexts.length];
+      const randomHint = noHintTexts[noMoveCount % noHintTexts.length];
+
+      noBtn.textContent = randomText;
+      noHint.textContent = randomHint;
+      noHint.classList.add("show");
+
+      moveNoButton();
+
+      if (navigator.vibrate) {
+        navigator.vibrate(45);
+      }
+
+      clearTimeout(noHint._timer);
+      noHint._timer = setTimeout(() => {
+        noHint.classList.remove("show");
+      }, 1400);
+    }
+
+    noBtn.addEventListener("click", reactNoButton);
+
+    noBtn.addEventListener("mouseenter", () => {
+      if (window.innerWidth > 768 && finalQuestionWritten) {
+        reactNoButton();
+      }
+    });
+
+    noBtn.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      reactNoButton();
+    }, { passive: false });
+  </script>
 </body>
 </html>
